@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2025-12-24
 
+### Package Information
+
+- **Name**: Gjallarhorn (rebranded from Heimdall)
+- **Naming**: Named after Heimdall's horn in Norse mythology, representing an alert/monitoring system
+- **Repository**: <https://github.com/arunkumar-mourougappane/gjallarhorn-rs>
+
 ### Added
 
 - **Real-time System Monitoring**
@@ -34,6 +40,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Structured logging system (info level for debug, error level for release)
   - All clippy warnings resolved
   - Code formatted with rustfmt
+
+- **CI/CD**
+  - GitHub Actions workflow for automated builds and testing
+  - Runs on ubuntu-latest with all required system dependencies
+  - Automated quality checks: cargo fmt, clippy, build (debug + release), and tests
+  - Caching for faster CI builds
 
 - **Distribution**
   - Installable as a binary via `cargo install gjallarhorn`

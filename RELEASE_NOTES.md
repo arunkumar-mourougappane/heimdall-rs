@@ -2,6 +2,8 @@
 
 We're excited to announce the first release of **Gjallarhorn**, a modern, cross-platform system resource monitor built with Rust and Slint!
 
+**About the Name**: Gjallarhorn is Heimdall's horn in Norse mythology, used to signal warnings and alerts - a perfect metaphor for a system monitoring tool.
+
 ## 🚀 What is Gjallarhorn?
 
 Gjallarhorn is a lightweight, real-time system resource monitor that provides beautiful visualizations of your computer's performance metrics. With support for CPU, Memory, GPU, and Network monitoring, Gjallarhorn gives you complete visibility into your system's health.
@@ -30,6 +32,7 @@ Gjallarhorn is a lightweight, real-time system resource monitor that provides be
 - Release builds recommended for best performance
 - All code passes clippy strict linting
 - Comprehensive documentation
+- **CI/CD**: Automated builds and testing via GitHub Actions
 
 ## 📦 Installation
 
