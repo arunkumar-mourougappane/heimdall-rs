@@ -10,7 +10,6 @@
 //!
 //! The application uses a modular structure, delegating configuration to `settings.rs` and utilities to `utils.rs`.
 
-use default_net;
 use log::{error, info};
 use nvml_wrapper::Nvml;
 use slint::{Model, Timer, TimerMode};
@@ -171,7 +170,7 @@ fn main() -> Result<(), slint::PlatformError> {
                                                          // sysinfo Networks iteration is arbitrary? Usually stable by name.
 
     // Sort keys to be stable
-    let mut interface_names: Vec<String> = networks.iter().map(|(n, _)| n.clone()).collect();
+    let mut interface_names: Vec<String> = networks.keys().cloned().collect();
     interface_names.sort();
 
     for (i, name) in interface_names.iter().enumerate() {
@@ -334,7 +333,7 @@ fn main() -> Result<(), slint::PlatformError> {
                         let max_val = network_history[i]
                             .iter()
                             .cloned()
-                            .fold(0.0 / 0.0, f32::max)
+                            .fold(f32::NAN, f32::max)
                             .max(1.0);
 
                         let path = generate_path(&network_history[i], max_val);
@@ -374,7 +373,7 @@ fn main() -> Result<(), slint::PlatformError> {
                         }
 
                         // Internet/Gateway indicator
-                        let is_gateway = default_intf_name.as_ref().map_or(false, |n| n == name);
+                        let is_gateway = default_intf_name.as_ref() == Some(name);
                         let gw_icon = if is_gateway { "🌐 " } else { "" };
 
                         let mut lines = Vec::new();
