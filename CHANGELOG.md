@@ -1,0 +1,64 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2025-12-24
+
+### Added
+
+- **Real-time System Monitoring**
+  - CPU monitoring with per-core usage tracking and 60-second history graphs
+  - Memory (RAM) monitoring with usage visualization
+  - GPU monitoring for NVIDIA GPUs (compute load and VRAM usage)
+  - Network monitoring for all active interfaces with real-time upload/download stats
+
+- **Modern User Interface**
+  - Clean, responsive Slint-based GUI
+  - Tabbed interface for organizing different metrics (CPU, RAM, GPU, Network)
+  - Dark Mode support with seamless theme switching
+  - Smooth animations and transitions
+  - Drop shadows and modern design elements
+
+- **Customization Features**
+  - Color customization for all chart types (CPU, RAM, GPU, Network)
+  - CPU color modes: Uniform (single color) or Per-Core (hue-based random colors)
+  - Persistent settings that save automatically and restore on startup
+  - Configuration stored in standard system directories (`~/.config/heimdall/config.json`)
+
+- **Developer Features**
+  - Comprehensive inline documentation (rustdoc comments)
+  - Modular code structure (settings, utils modules)
+  - Structured logging system (info level for debug, error level for release)
+  - All clippy warnings resolved
+  - Code formatted with rustfmt
+
+- **Distribution**
+  - Installable as a binary via `cargo install heimdall`
+  - Complete crates.io metadata (homepage, documentation, keywords, categories)
+  - Professional README with badges and installation instructions
+  - Contributing guidelines (CONTRIBUTING.md)
+  - MIT License
+
+- **Documentation**
+  - Detailed README with features, installation, and usage instructions
+  - Module-level documentation for all source files
+  - Function-level documentation for public APIs
+  - Performance recommendations
+  - Contributing guidelines
+
+### Technical Details
+
+- **Language**: Rust (Edition 2021)
+- **UI Framework**: Slint 1.8.0
+- **Dependencies**:
+  - `sysinfo` 0.33.0 for CPU/RAM monitoring
+  - `nvml-wrapper` 0.9 for NVIDIA GPU monitoring
+  - `default-net` 0.22.0 for network interface detection
+  - `serde` & `serde_json` for settings persistence
+  - `directories` 6.0.0 for cross-platform config paths
+  - `log` & `env_logger` for structured logging
+
+[0.1.0]: https://github.com/arunkumar-mourougappane/heimdall-rs/releases/tag/v0.1.0
