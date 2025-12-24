@@ -1,6 +1,6 @@
 //! # Main Application Entry Point
 //!
-//! This file contains the `main` function which orchestrates the Heimdall-rs application.
+//! This file contains the `main` function which orchestrates the Gjallarhorn application.
 //! It is responsible for:
 //! - Initializing the Slint User Interface.
 //! - Loading and applying persistent application settings (`settings` module).
@@ -24,7 +24,7 @@ use utils::{brush_to_hex, generate_path, hex_to_color};
 
 include!(env!("SLINT_INCLUDE_GENERATED"));
 
-/// Main entry point of the Heimdall application.
+/// Main entry point of the Gjallarhorn application.
 ///
 /// 1. Initializes the Slint UI.
 /// 2. Loads persistent settings.
@@ -59,7 +59,7 @@ fn main() -> Result<(), slint::PlatformError> {
     // Initial refresh to get CPU count
     system.refresh_cpu_all();
     let cpu_count = system.cpus().len();
-    info!("Heimdall detected {} CPU cores (logical)", cpu_count);
+    info!("Gjallarhorn detected {} CPU cores (logical)", cpu_count);
 
     // History for each CPU
     let mut cpus_history: Vec<Vec<f32>> = vec![vec![0.0; 60]; cpu_count];
@@ -116,7 +116,7 @@ fn main() -> Result<(), slint::PlatformError> {
     if let Ok(nvml) = &nvml_result {
         if let Ok(count) = nvml.device_count() {
             gpu_count = count as usize;
-            info!("Heimdall detected {} GPU(s)", gpu_count);
+            info!("Gjallarhorn detected {} GPU(s)", gpu_count);
         }
     } else {
         error!(

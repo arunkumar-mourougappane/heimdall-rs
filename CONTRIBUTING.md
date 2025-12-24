@@ -1,6 +1,6 @@
-# Contributing to Heimdall-rs
+# Contributing to Gjallarhorn
 
-Thank you for your interest in contributing to **Heimdall-rs**! We welcome contributions from everyone. By participating in this project, you help make it better for the entire community.
+Thank you for your interest in contributing to **Gjallarhorn**! We welcome contributions from everyone. By participating in this project, you help make it better for the entire community.
 
 ## Getting Started
 

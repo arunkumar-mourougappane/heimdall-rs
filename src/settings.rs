@@ -1,6 +1,6 @@
 //! # Application Settings Module
 //!
-//! This module manages the persistent configuration for Heimdall-rs.
+//! This module manages the persistent configuration for Gjallarhorn.
 //! It defines the `AppSettings` struct which holds user preferences such as:
 //! - Visual Theme (Dark Mode)
 //! - CPU Color Mode (Uniform vs Per-Core)
@@ -44,7 +44,7 @@ impl Default for AppSettings {
 
 impl AppSettings {
     fn get_path() -> PathBuf {
-        if let Some(proj_dirs) = ProjectDirs::from("com", "heimdall", "heimdall") {
+        if let Some(proj_dirs) = ProjectDirs::from("com", "gjallarhorn", "gjallarhorn") {
             let config_dir = proj_dirs.config_dir();
             if !config_dir.exists() {
                 let _ = fs::create_dir_all(config_dir);

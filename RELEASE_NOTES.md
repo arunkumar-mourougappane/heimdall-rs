@@ -1,10 +1,10 @@
-# Heimdall v0.1.0 - Initial Release 🎉
+# Gjallarhorn v0.1.0 - Initial Release 🎉
 
-We're excited to announce the first release of **Heimdall**, a modern, cross-platform system resource monitor built with Rust and Slint!
+We're excited to announce the first release of **Gjallarhorn**, a modern, cross-platform system resource monitor built with Rust and Slint!
 
-## 🚀 What is Heimdall?
+## 🚀 What is Gjallarhorn?
 
-Heimdall is a lightweight, real-time system resource monitor that provides beautiful visualizations of your computer's performance metrics. With support for CPU, Memory, GPU, and Network monitoring, Heimdall gives you complete visibility into your system's health.
+Gjallarhorn is a lightweight, real-time system resource monitor that provides beautiful visualizations of your computer's performance metrics. With support for CPU, Memory, GPU, and Network monitoring, Gjallarhorn gives you complete visibility into your system's health.
 
 ## ✨ Key Features
 
@@ -36,7 +36,7 @@ Heimdall is a lightweight, real-time system resource monitor that provides beaut
 ### From crates.io (Recommended)
 
 ```bash
-cargo install heimdall
+cargo install gjallarhorn
 ```
 
 ### From Source
@@ -52,7 +52,7 @@ cargo install --path .
 Simply run:
 
 ```bash
-heimdall
+gjallarhorn
 ```
 
 Then navigate using:
@@ -90,8 +90,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - **Homepage**: <https://github.com/arunkumar-mourougappane/heimdall-rs>
-- **crates.io**: <https://crates.io/crates/heimdall>
-- **Documentation**: <https://docs.rs/heimdall>
+- **crates.io**: <https://crates.io/crates/gjallarhorn>
+- **Documentation**: <https://docs.rs/gjallarhorn>
 - **Issues**: <https://github.com/arunkumar-mourougappane/heimdall-rs/issues>
 
 ---

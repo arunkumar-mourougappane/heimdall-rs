@@ -1,4 +1,10 @@
-import { VerticalBox, HorizontalBox, Button, ScrollView, ListView } from "std-widgets.slint";
+import {
+    VerticalBox,
+    HorizontalBox,
+    Button,
+    ScrollView,
+    ListView,
+} from "std-widgets.slint";
 
 // Data structure representing a single CPU core or generic usage metric.
 export struct CpuData {
@@ -45,7 +51,7 @@ component LineChart inherits Rectangle {
     }
     
     // Optional Title Overlay
-    if root.title != "" : Text {
+    if root.title != "": Text {
         x: 5px;
         y: 5px;
         text: root.title;
@@ -61,7 +67,6 @@ component Card inherits Rectangle {
     in property <brush> bg-color;
     in property <brush> card-border-color;
     in property <brush> text-color;
-    
     background: bg-color;
     border-color: card-border-color;
     border-width: 1px;
@@ -75,14 +80,13 @@ component Card inherits Rectangle {
     VerticalBox {
         padding: 15px;
         spacing: 10px;
-        
         Text {
             text: root.card-title;
             font-size: 18px;
             font-weight: 700;
             color: root.text-color;
         }
-        
+
         @children
     }
 }
@@ -91,15 +95,16 @@ component Card inherits Rectangle {
 component TabButton inherits Rectangle {
     in property <string> text;
     in property <bool> active;
-    in property <brush> text-color; 
+    in property <brush> text-color;
     callback clicked();
-    
     width: 100px;
     height: 40px;
     border-radius: 4px;
     background: root.active ? #3498db : (ta.has-hover ? #3498db.with-alpha(0.1) : #00000000);
-    
-    animate background { duration: 200ms; easing: ease-out; }
+    animate background {
+        duration: 200ms;
+        easing: ease-out;
+    }
 
     Text {
         x: (parent.width - self.width) / 2;
@@ -108,9 +113,11 @@ component TabButton inherits Rectangle {
         color: root.active ? #ffffff : root.text-color;
         animate color { duration: 200ms; }
     }
-    
+
     ta := TouchArea {
-        clicked => { root.clicked(); }
+        clicked => {
+            root.clicked();
+        }
     }
 }
 
@@ -120,14 +127,15 @@ component SideBarButton inherits Rectangle {
     in property <bool> active;
     in property <brush> text-color;
     callback clicked();
-    
     height: 45px; // Slightly taller
     background: root.active ? #3498db.with_alpha(0.15) : (ta.has-hover ? #3498db.with-alpha(0.05) : #00000000);
-    
-    animate background { duration: 200ms; easing: ease-out; }
+    animate background {
+        duration: 200ms;
+        easing: ease-out;
+    }
 
     // Active Indicator Line
-    if root.active : Rectangle {
+    if root.active: Rectangle {
         x: 0;
         y: 10px;
         width: 3px;
@@ -135,7 +143,6 @@ component SideBarButton inherits Rectangle {
         background: #3498db;
         border-radius: 2px;
     }
-    
     HorizontalBox {
         padding-left: 15px; // More indentation
         alignment: start;
@@ -150,7 +157,9 @@ component SideBarButton inherits Rectangle {
     }
 
     ta := TouchArea {
-        clicked => { root.clicked(); }
+        clicked => {
+            root.clicked();
+        }
     }
 }
 
@@ -165,9 +174,7 @@ component MenuButton inherits Rectangle {
     height: 30px; // Standard menu height
     
     background: root.active ? #ffffff.with-alpha(0.2) : (ta.has-hover ? #ffffff.with-alpha(0.1) : #00000000);
-    
     animate background { duration: 150ms; }
-    
     txt := Text {
         text: root.text;
         color: root.text-color;
@@ -177,9 +184,11 @@ component MenuButton inherits Rectangle {
         font-weight: 500;
         animate color { duration: 150ms; }
     }
-    
+
     ta := TouchArea {
-        clicked => { root.clicked(); }
+        clicked => {
+            root.clicked();
+        }
     }
 }
 
@@ -190,9 +199,8 @@ component UsageView inherits VerticalBox {
     in property <string> memory-path;
     in property <string> memory-label;
     in property <[CpuData]> gpu-compute;
-    in property <[CpuData]> gpu-memory; 
+    in property <[CpuData]> gpu-memory;
     in property <[CpuData]> networks;
-    
     in property <brush> text-color;
     in property <brush> card-bg;
     in property <brush> card-border;
@@ -214,31 +222,60 @@ component UsageView inherits VerticalBox {
     HorizontalBox {
         spacing: 10px;
         alignment: start;
-        
-        TabButton { text: "CPU"; active: root.active-tab == 0; text-color: root.text-color; clicked => { root.active-tab = 0; } }
-        TabButton { text: "RAM"; active: root.active-tab == 1; text-color: root.text-color; clicked => { root.active-tab = 1; } }
-        TabButton { text: "GPU"; active: root.active-tab == 2; text-color: root.text-color; clicked => { root.active-tab = 2; } }
-        TabButton { text: "Network"; active: root.active-tab == 3; text-color: root.text-color; clicked => { root.active-tab = 3; } }
+        TabButton {
+            text: "CPU";
+            active: root.active-tab == 0;
+            text-color: root.text-color;
+            clicked => {
+                root.active-tab = 0;
+            }
+        }
+
+        TabButton {
+            text: "RAM";
+            active: root.active-tab == 1;
+            text-color: root.text-color;
+            clicked => {
+                root.active-tab = 1;
+            }
+        }
+
+        TabButton {
+            text: "GPU";
+            active: root.active-tab == 2;
+            text-color: root.text-color;
+            clicked => {
+                root.active-tab = 2;
+            }
+        }
+
+        TabButton {
+            text: "Network";
+            active: root.active-tab == 3;
+            text-color: root.text-color;
+            clicked => {
+                root.active-tab = 3;
+            }
+        }
     }
 
     Rectangle {
         // CPU View
-        if root.active-tab == 0 : Card {
+        if root.active-tab == 0: Card {
             card-title: "CPU Usage (Per Core)";
             bg-color: root.card-bg;
             card-border-color: root.card-border;
             text-color: root.text-color;
-            
             Rectangle {
-                    vertical-stretch: 1;
+                vertical-stretch: 1;
 
-                    for cpu[i] in root.cpus : LineChart {
+                for cpu[i] in root.cpus: LineChart {
                     x: (i - 4 * floor(i / 4)) * (self.width + 10px);
                     y: floor(i / 4) * (self.height + 10px);
                     width: (parent.width - 30px) / 4;
                     height: (parent.height - 30px) / 4;
                     path-commands: cpu.path-commands;
-                    line-color: root.use-uniform-cpu ? root.cpu-color : cpu.color; 
+                    line-color: root.use-uniform-cpu ? root.cpu-color : cpu.color;
                     bg-color: root.chart-bg;
                     chart-border-color: root.chart-border;
                     title: cpu.usage-str;
@@ -247,18 +284,19 @@ component UsageView inherits VerticalBox {
             }
         }
 
-
-        
         // RAM View
-        if root.active-tab == 1 : Card {
+        if root.active-tab == 1: Card {
             card-title: "Memory Usage";
             bg-color: root.card-bg;
             card-border-color: root.card-border;
             text-color: root.text-color;
-            
             VerticalBox {
                 spacing: 10px;
-                Text { text: "System Memory: " + root.memory-label; color: root.text-color; }
+                Text {
+                    text: "System Memory: " + root.memory-label;
+                    color: root.text-color;
+                }
+
                 LineChart {
                     height: 200px;
                     path-commands: root.memory-path;
@@ -266,62 +304,76 @@ component UsageView inherits VerticalBox {
                     bg-color: root.chart-bg;
                     chart-border-color: root.chart-border;
                 }
-                
-                Text { text: "GPU Memory"; font-size: 14px; font-weight: 700; color: root.text-color; }
+
+                Text {
+                    text: "GPU Memory";
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: root.text-color;
+                }
+
                 ListView {
-                    for gpu in root.gpu-memory : VerticalBox {
-                            padding-bottom: 10px;
-                            Text { text: gpu.usage-str; color: root.text-color; font-size: 12px; }
-                            LineChart {
+                    for gpu in root.gpu-memory: VerticalBox {
+                        padding-bottom: 10px;
+                        Text {
+                            text: gpu.usage-str;
+                            color: root.text-color;
+                            font-size: 12px;
+                        }
+
+                        LineChart {
                             height: 100px;
                             path-commands: gpu.path-commands;
                             line-color: root.gpu-color; // Override
                             bg-color: root.chart-bg;
                             chart-border-color: root.chart-border;
-                            }
+                        }
                     }
                 }
             }
         }
         
         // GPU View
-        if root.active-tab == 2 : Card {
+        if root.active-tab == 2: Card {
             card-title: "GPU Compute";
             bg-color: root.card-bg;
             card-border-color: root.card-border;
             text-color: root.text-color;
-            
             ListView {
-                for gpu in root.gpu-compute : VerticalBox {
-                        padding-bottom: 10px;
-                        Text { text: gpu.usage-str; color: root.text-color; }
-                        LineChart {
+                for gpu in root.gpu-compute: VerticalBox {
+                    padding-bottom: 10px;
+                    Text {
+                        text: gpu.usage-str;
+                        color: root.text-color;
+                    }
+
+                    LineChart {
                         height: 200px;
                         path-commands: gpu.path-commands;
                         line-color: root.gpu-color; // Override
                         bg-color: root.chart-bg;
                         chart-border-color: root.chart-border;
-                        }
+                    }
                 }
             }
         }
         
         // Network View
-        if root.active-tab == 3 : Card {
+        if root.active-tab == 3: Card {
             card-title: "Network Interfaces";
             bg-color: root.card-bg;
             card-border-color: root.card-border;
             text-color: root.text-color;
-            
             ListView {
-                for net in root.networks : VerticalBox {
+                for net in root.networks: VerticalBox {
                     padding-bottom: 15px;
-                    Text { 
-                        text: net.usage-str; 
-                        color: root.text-color; 
+                    Text {
+                        text: net.usage-str;
+                        color: root.text-color;
                         font-size: 13px;
                         wrap: word-wrap;
                     }
+
                     LineChart {
                         width: 100%;
                         height: 100px;
@@ -349,17 +401,21 @@ component ColorSwatch inherits Rectangle {
     border-width: root.active ? 2px : 0px;
     
     // Selection Ring
-    if root.active : Rectangle {
+    if root.active: Rectangle {
         width: 34px;
         height: 34px;
-        x: -2px; y: -2px;
+        x: -2px;
+        y: -2px;
         border-radius: 17px;
         border-color: root.swatch-color;
         border-width: 2px;
         background: transparent;
     }
-    
-    TouchArea { clicked => { root.clicked(); } }
+    TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
 }
 
 // A row of color swatches allowing the user to pick a predefined color.
@@ -370,22 +426,63 @@ component ColorPicker inherits HorizontalBox {
     callback color-changed(brush);
 
     spacing: 5px;
-    
-    Text { 
-        text: root.label; 
-        width: 80px; 
-        vertical-alignment: center; 
+    Text {
+        text: root.label;
+        width: 80px;
+        vertical-alignment: center;
         color: #888888;
     }
 
     // Predefined Palette
-    ColorSwatch { swatch-color: #e74c3c; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // Red
-    ColorSwatch { swatch-color: #e67e22; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // Orange
-    ColorSwatch { swatch-color: #f1c40f; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // Yellow
-    ColorSwatch { swatch-color: #2ecc71; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // Green
-    ColorSwatch { swatch-color: #3498db; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // Blue
-    ColorSwatch { swatch-color: #9b59b6; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // Purple
-    ColorSwatch { swatch-color: #ffffff; active: root.current-color == self.swatch-color; clicked => { root.color-changed(self.swatch-color); } } // White
+    ColorSwatch {
+        swatch-color: #e74c3c;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // Red
+    ColorSwatch {
+        swatch-color: #e67e22;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // Orange
+    ColorSwatch {
+        swatch-color: #f1c40f;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // Yellow
+    ColorSwatch {
+        swatch-color: #2ecc71;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // Green
+    ColorSwatch {
+        swatch-color: #3498db;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // Blue
+    ColorSwatch {
+        swatch-color: #9b59b6;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // Purple
+    ColorSwatch {
+        swatch-color: #ffffff;
+        active: root.current-color == self.swatch-color;
+        clicked => {
+            root.color-changed(self.swatch-color);
+        }
+    } // White
 }
 
 // Dialog overlay for application settings.
@@ -399,9 +496,12 @@ component PreferencesDialog inherits Rectangle {
     in-out property <brush> net-color;
     callback close();
 
-    background: #00000080; 
-    
-    TouchArea { clicked => { root.close(); } }
+    background: #00000080;
+    TouchArea {
+        clicked => {
+            root.close();
+        }
+    }
 
     Rectangle {
         width: 500px;
@@ -410,8 +510,7 @@ component PreferencesDialog inherits Rectangle {
         border-radius: 8px;
         border-color: root.dark-mode ? #333333 : #cccccc;
         border-width: 1px;
-        
-        TouchArea {} // Block clicks
+        TouchArea { } // Block clicks
 
         VerticalBox {
             padding: 20px;
@@ -424,92 +523,141 @@ component PreferencesDialog inherits Rectangle {
                 font-weight: 700;
                 color: root.dark-mode ? #e0e0e0 : #333333;
             }
-            
-            Rectangle { height: 1px; background: #cccccc; width: 100%; }
+
+            Rectangle {
+                height: 1px;
+                background: #cccccc;
+                width: 100%;
+            }
 
             // Dark Mode Toggle
             HorizontalBox {
                 spacing: 10px;
-                Text { 
-                    text: "Dark Mode"; 
-                    vertical-alignment: center; 
+                Text {
+                    text: "Dark Mode";
+                    vertical-alignment: center;
                     color: root.dark-mode ? #e0e0e0 : #333333;
                     width: 120px;
                 }
+
                 Rectangle {
-                    width: 50px; height: 26px; border-radius: 13px;
+                    width: 50px;
+                    height: 26px;
+                    border-radius: 13px;
                     background: root.dark-mode ? #3498db : #cccccc;
                     animate background { duration: 200ms; }
-                    
                     Rectangle {
                         x: root.dark-mode ? 26px : 2px;
                         y: 2px;
-                        width: 22px; height: 22px; border-radius: 11px;
+                        width: 22px;
+                        height: 22px;
+                        border-radius: 11px;
                         background: white;
-                        animate x { duration: 200ms; easing: ease-out; }
+                        animate x {
+                            duration: 200ms;
+                            easing: ease-out;
+                        }
                     }
-                    TouchArea { clicked => { root.dark-mode = !root.dark-mode; } }
+
+                    TouchArea {
+                        clicked => {
+                            root.dark-mode = !root.dark-mode;
+                        }
+                    }
                 }
             }
-            
-            Text { text: "CPU Colors"; font-weight: 700; color: root.dark-mode ? #e0e0e0 : #333333; }
+
+            Text {
+                text: "CPU Colors";
+                font-weight: 700;
+                color: root.dark-mode ? #e0e0e0 : #333333;
+            }
             
              // Uniform CPU Toggle
             HorizontalBox {
                 spacing: 10px;
-                Text { 
-                    text: "Uniform Color"; 
-                    vertical-alignment: center; 
+                Text {
+                    text: "Uniform Color";
+                    vertical-alignment: center;
                     color: root.dark-mode ? #e0e0e0 : #333333;
                     width: 120px;
                 }
+
                 Rectangle {
-                    width: 50px; height: 26px; border-radius: 13px;
+                    width: 50px;
+                    height: 26px;
+                    border-radius: 13px;
                     background: root.use-uniform-cpu ? #3498db : #cccccc;
                     animate background { duration: 200ms; }
-                    
                     Rectangle {
                         x: root.use-uniform-cpu ? 26px : 2px;
                         y: 2px;
-                        width: 22px; height: 22px; border-radius: 11px;
+                        width: 22px;
+                        height: 22px;
+                        border-radius: 11px;
                         background: white;
-                        animate x { duration: 200ms; easing: ease-out; }
+                        animate x {
+                            duration: 200ms;
+                            easing: ease-out;
+                        }
                     }
-                    TouchArea { clicked => { root.use-uniform-cpu = !root.use-uniform-cpu; } }
+
+                    TouchArea {
+                        clicked => {
+                            root.use-uniform-cpu = !root.use-uniform-cpu;
+                        }
+                    }
                 }
             }
 
-            if root.use-uniform-cpu : ColorPicker { 
-                label: "CPU Color"; 
-                current-color: root.cpu-color; 
-                color-changed(c) => { root.cpu-color = c; } 
+            if root.use-uniform-cpu: ColorPicker {
+                label: "CPU Color";
+                current-color: root.cpu-color;
+                color-changed(c) => {
+                    root.cpu-color = c;
+                }
             }
-            
-            Text { text: "Other Colors"; font-weight: 700; color: root.dark-mode ? #e0e0e0 : #333333; }
-
-            ColorPicker { 
-                label: "Memory"; 
-                current-color: root.ram-color; 
-                color-changed(c) => { root.ram-color = c; } 
-            }
-            ColorPicker { 
-                label: "GPU"; 
-                current-color: root.gpu-color; 
-                color-changed(c) => { root.gpu-color = c; } 
-            }
-            ColorPicker { 
-                label: "Network"; 
-                current-color: root.net-color; 
-                color-changed(c) => { root.net-color = c; } 
+            Text {
+                text: "Other Colors";
+                font-weight: 700;
+                color: root.dark-mode ? #e0e0e0 : #333333;
             }
 
-            Rectangle { vertical-stretch: 1; } // Spacer
+            ColorPicker {
+                label: "Memory";
+                current-color: root.ram-color;
+                color-changed(c) => {
+                    root.ram-color = c;
+                }
+            }
+
+            ColorPicker {
+                label: "GPU";
+                current-color: root.gpu-color;
+                color-changed(c) => {
+                    root.gpu-color = c;
+                }
+            }
+
+            ColorPicker {
+                label: "Network";
+                current-color: root.net-color;
+                color-changed(c) => {
+                    root.net-color = c;
+                }
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            } // Spacer
 
             HorizontalBox {
                 alignment: end;
                 Button {
                     text: "Close";
-                    clicked => { root.close(); }
+                    clicked => {
+                        root.close();
+                    }
                 }
             }
         }
@@ -524,19 +672,20 @@ component AboutDialog inherits Rectangle {
     in property <string> version;
     callback close();
 
-    background: #00000080; 
-    
+    background: #00000080;
     TouchArea {
-        clicked => { root.close(); }
+        clicked => {
+            root.close();
+        }
     }
 
     Rectangle {
         width: 450px;
         height: 400px; // Increased height
-        background: white; 
+        background: white;
         border-radius: 12px; // Softer corners
         
-        TouchArea {} // Block clicks from closing
+        TouchArea { } // Block clicks from closing
 
         VerticalBox {
             padding: 30px;
@@ -545,21 +694,23 @@ component AboutDialog inherits Rectangle {
 
             // Header
             Text {
-                text: "Heimdall-rs";
+                text: "Gjallarhorn";
                 font-size: 28px;
                 font-weight: 800;
                 horizontal-alignment: center;
                 color: #2c3e50;
             }
-            
+
             Text {
                 text: "v" + root.version;
                 font-size: 14px;
                 color: #7f8c8d;
                 horizontal-alignment: center;
             }
-            
-            Rectangle { height: 10px; } // Spacer
+
+            Rectangle {
+                height: 10px;
+            } // Spacer
 
             // Description
             Text {
@@ -569,10 +720,19 @@ component AboutDialog inherits Rectangle {
                 horizontal-alignment: center;
                 wrap: word-wrap;
             }
-            
-            Rectangle { height: 15px; } // Spacer
-            Rectangle { height: 1px; background: #ecf0f1; width: 100%; }
-            Rectangle { height: 15px; } // Spacer
+
+            Rectangle {
+                height: 15px;
+            } // Spacer
+            Rectangle {
+                height: 1px;
+                background: #ecf0f1;
+                width: 100%;
+            }
+
+            Rectangle {
+                height: 15px;
+            } // Spacer
 
             // Author Info
             Text {
@@ -582,20 +742,21 @@ component AboutDialog inherits Rectangle {
                 horizontal-alignment: center;
                 color: #2c3e50;
             }
-            
+
             Text {
                 text: "Embedded Software Engineer";
                 font-size: 12px;
                 color: #7f8c8d;
                 horizontal-alignment: center;
             }
-             Text {
+
+            Text {
                 text: "github.com/arunkumar-mourougappane";
                 font-size: 12px;
                 color: #3498db; // Link color
                 horizontal-alignment: center;
             }
-            
+
             Text {
                 text: root.email;
                 font-size: 12px;
@@ -603,7 +764,9 @@ component AboutDialog inherits Rectangle {
                 horizontal-alignment: center;
             }
 
-            Rectangle { vertical-stretch: 1; } // Push button to bottom
+            Rectangle {
+                vertical-stretch: 1;
+            } // Push button to bottom
 
             // License
             Text {
@@ -615,7 +778,9 @@ component AboutDialog inherits Rectangle {
 
             Button {
                 text: "Close";
-                clicked => { root.close(); }
+                clicked => {
+                    root.close();
+                }
                 height: 35px;
                 primary: true;
             }
@@ -627,12 +792,11 @@ component AboutDialog inherits Rectangle {
 // Contains the Menu Ribbon, Sidebar, and Content Area.
 // Manages global state including theme properties and dialog visibility.
 export component AppWindow inherits Window {
-    title: "Heimdall Resource Monitor";
+    title: "Gjallarhorn Resource Monitor";
     preferred-width: 900px;
     preferred-height: 900px;
     min-width: 800px;
     min-height: 600px;
-    
     callback quit();
     callback save-prefs();
 
@@ -662,18 +826,15 @@ export component AppWindow inherits Window {
     property <bool> show-help-menu: false;
     property <bool> show-file-menu: false;
     property <bool> show-preferences: false;
-    
     property <brush> background-color: root.dark-mode ? #121212 : #f5f5f5;
     property <brush> text-color: root.dark-mode ? #e0e0e0 : #333333;
     property <brush> card-bg: root.dark-mode ? #1e1e1e : #ffffff;
     property <brush> card-border: root.dark-mode ? #333333 : #e0e0e0;
     property <brush> chart-bg: root.dark-mode ? #2d2d2d : #fafafa;
     property <brush> chart-border: root.dark-mode ? #444444 : #cccccc;
-    
-    property <brush> menu-bg: root.dark-mode ? #252525 : #dcdcdc; 
+    property <brush> menu-bg: root.dark-mode ? #252525 : #dcdcdc;
 
     background: root.background-color;
-    
     Rectangle {
         width: 100%;
         height: 100%;
@@ -686,24 +847,27 @@ export component AppWindow inherits Window {
             Rectangle {
                 height: 35px;
                 background: root.menu-bg;
-                border-width: 0px; 
-                
+                border-width: 0px;
                 HorizontalBox {
                     alignment: start;
                     padding-left: 5px;
                     spacing: 0px;
-                    
-                    file_btn := MenuButton { 
-                        text: "File"; 
+                    file_btn := MenuButton {
+                        text: "File";
                         text-color: root.text-color;
                         active: root.show-file-menu;
-                        clicked => { root.show-file-menu = !root.show-file-menu; }
+                        clicked => {
+                            root.show-file-menu = !root.show-file-menu;
+                        }
                     }
-                    help_btn := MenuButton { 
-                        text: "Help"; 
+
+                    help_btn := MenuButton {
+                        text: "Help";
                         text-color: root.text-color;
                         active: root.show-help-menu;
-                        clicked => { root.show-help-menu = !root.show-help-menu; } 
+                        clicked => {
+                            root.show-help-menu = !root.show-help-menu;
+                        }
                     }
                 }
                 
@@ -720,14 +884,12 @@ export component AppWindow inherits Window {
             Rectangle {
                 height: 60px;
                 background: root.card-bg;
-                
                 HorizontalBox {
                     alignment: space-between;
                     padding-left: 20px;
                     padding-right: 20px;
-                    
                     Text {
-                        text: "Heimdall Monitor";
+                        text: "Gjallarhorn Monitor";
                         font-size: 24px;
                         font-weight: 900;
                         vertical-alignment: center;
@@ -761,12 +923,11 @@ export component AppWindow inherits Window {
                         background: root.card-border;
                         height: 100%;
                     }
-                    
+
                     VerticalBox {
                         padding-top: 20px;
                         alignment: start;
                         spacing: 5px;
-                        
                         Text {
                             text: "GROUPS";
                             color: root.text-color.with-alpha(0.5);
@@ -778,7 +939,9 @@ export component AppWindow inherits Window {
                             text: "Usage";
                             active: root.active-section == 0;
                             text-color: root.text-color;
-                            clicked => { root.active-section = 0; }
+                            clicked => {
+                                root.active-section = 0;
+                            }
                         }
                     }
                 }
@@ -786,7 +949,7 @@ export component AppWindow inherits Window {
                 // Content Area
                 Rectangle {
                     background: root.background-color;
-                    if root.active-section == 0 : UsageView {
+                    if root.active-section == 0: UsageView {
                         cpus: root.cpus;
                         memory-path: root.memory-path;
                         memory-label: root.memory-label;
@@ -813,18 +976,18 @@ export component AppWindow inherits Window {
         }
         
         // Menu Blocker
-        if root.show-help-menu || root.show-file-menu : TouchArea {
+        if root.show-help-menu || root.show-file-menu: TouchArea {
             width: 100%;
             height: 100%;
-            clicked => { 
-                root.show-help-menu = false; 
+            clicked => {
+                root.show-help-menu = false;
                 root.show-file-menu = false;
             }
             z: 100;
         }
 
         // File Menu Dropdown
-        if root.show-file-menu : Rectangle {
+        if root.show-file-menu: Rectangle {
             x: file_btn.absolute-position.x;
             y: file_btn.absolute-position.y + file_btn.height;
             width: 150px;
@@ -834,24 +997,29 @@ export component AppWindow inherits Window {
             border-width: 1px;
             border-radius: 4px;
             z: 101;
-            
             drop-shadow-blur: 8px;
             drop-shadow-color: #00000030;
             drop-shadow-offset-y: 2px;
-            
             VerticalBox {
-                padding: 0px; spacing: 0px;
+                padding: 0px;
+                spacing: 0px;
                 
                 // Preferences
                 Rectangle {
                     height: 40px;
                     background: pref_ta.has-hover ? root.menu-bg : transparent;
-                    Text { x: 15px; vertical-alignment: center; text: "Preferences"; color: root.text-color; }
+                    Text {
+                        x: 15px;
+                        vertical-alignment: center;
+                        text: "Preferences";
+                        color: root.text-color;
+                    }
+
                     pref_ta := TouchArea {
-                         clicked => {
-                             root.show-file-menu = false;
-                             root.show-preferences = true;
-                         }
+                        clicked => {
+                            root.show-file-menu = false;
+                            root.show-preferences = true;
+                        }
                     }
                 }
                 
@@ -859,16 +1027,24 @@ export component AppWindow inherits Window {
                 Rectangle {
                     height: 40px;
                     background: quit_ta.has-hover ? root.menu-bg : transparent;
-                    Text { x: 15px; vertical-alignment: center; text: "Quit"; color: root.text-color; }
+                    Text {
+                        x: 15px;
+                        vertical-alignment: center;
+                        text: "Quit";
+                        color: root.text-color;
+                    }
+
                     quit_ta := TouchArea {
-                         clicked => { root.quit(); }
+                        clicked => {
+                            root.quit();
+                        }
                     }
                 }
             }
         }
 
         // Help Dropdown Menu
-        if root.show-help-menu : Rectangle {
+        if root.show-help-menu: Rectangle {
             x: help_btn.absolute-position.x;
             y: help_btn.absolute-position.y + help_btn.height;
             width: 150px;
@@ -877,26 +1053,24 @@ export component AppWindow inherits Window {
             border-color: root.card-border;
             border-width: 1px;
             border-radius: 4px;
-            z: 101; 
-            
+            z: 101;
             drop-shadow-blur: 8px;
             drop-shadow-color: #00000030;
             drop-shadow-offset-y: 2px;
-            
             VerticalBox {
-                padding: 0px; spacing: 0px;
+                padding: 0px;
+                spacing: 0px;
                 // Item: About
                 Rectangle {
                     height: 40px;
                     background: item_ta.has-hover ? root.menu-bg : transparent;
-                    
                     Text {
                         x: 15px;
                         vertical-alignment: center;
                         text: "About";
                         color: root.text-color;
                     }
-                    
+
                     item_ta := TouchArea {
                         clicked => {
                             root.show-help-menu = false;
@@ -908,28 +1082,31 @@ export component AppWindow inherits Window {
         }
 
         // Preferences Dialog Overlay
-        if root.show-preferences : PreferencesDialog {
-            width: 100%; height: 100%;
+        if root.show-preferences: PreferencesDialog {
+            width: 100%;
+            height: 100%;
             dark-mode <=> root.dark-mode;
             use-uniform-cpu <=> root.use-uniform-cpu;
             cpu-color <=> root.cpu-chart-color;
             ram-color <=> root.ram-chart-color;
             gpu-color <=> root.gpu-chart-color;
             net-color <=> root.net-chart-color;
-            close => { 
+            close => {
                 root.save-prefs();
-                root.show-preferences = false; 
+                root.show-preferences = false;
             }
         }
 
         // About Dialog Overlay
-        if root.show-about : AboutDialog {
+        if root.show-about: AboutDialog {
             width: 100%;
             height: 100%;
             author: "Arunkumar Mourougappane";
             email: "amouroug@buffalo.edu";
             version: root.version;
-            close => { root.show-about = false; }
+            close => {
+                root.show-about = false;
+            }
         }
     }
 }
