@@ -1,6 +1,11 @@
-# Heimdall-rs
+# Heimdall
 
-**Heimdall-rs** is a modern, lightweight, and cross-platform system resource monitor written in **Rust** using the **Slint** UI toolkit. It provides real-time visualization of your system's performance metrics with a sleek and customizable interface.
+[![Crates.io](https://img.shields.io/crates/v/heimdall?style=flat-square)](https://crates.io/crates/heimdall)
+[![Documentation](https://img.shields.io/docsrs/heimdall?style=flat-square)](https://docs.rs/heimdall)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Downloads](https://img.shields.io/crates/d/heimdall?style=flat-square)](https://crates.io/crates/heimdall)
+
+**Heimdall** is a modern, lightweight, and cross-platform system resource monitor written in **Rust** using the **Slint** UI toolkit. It provides real-time visualization of your system's performance metrics with a sleek and customizable interface.
 
 ## Features
 
@@ -30,7 +35,25 @@
   - **Fontconfig** (for Linux font handling)
   - **NVIDIA Drivers** (optional, for GPU stats)
 
-### Building from Source
+### Install from Source
+
+```bash
+git clone https://github.com/arunkumar-mourougappane/heimdall-rs.git
+cd heimdall-rs
+cargo install --path .
+```
+
+This will compile and install the `heimdall` binary to `~/.cargo/bin/` (make sure this is in your PATH).
+
+### Install from crates.io
+
+Once published:
+
+```bash
+cargo install heimdall
+```
+
+### Building from Source (Development)
 
 ```bash
 git clone https://github.com/arunkumar-mourougappane/heimdall-rs.git
@@ -40,7 +63,7 @@ cargo run --release
 
 ## Usage
 
-1. **Launch**: Run the application using `cargo run`.
+1. **Launch**: Run `heimdall` from your terminal (if installed), or use `cargo run` during development.
 2. **Navigation**: Use the Sidebar to select "Usage" (Monitoring View). The top tabs allow switching between CPU, RAM, GPU, and Network details.
 3. **Preferences**:
     - Click **File > Preferences** to open the settings dialog.
@@ -55,7 +78,7 @@ Settings are stored in your system's standard configuration directory (e.g., `~/
 
 ## Performance
 
-For the smoothest experience, always compile and run **Heimdall-rs** in **Release** mode.
+For the smoothest experience, always compile and run **Heimdall** in **Release** mode.
 Debug builds include extensive runtime checks that can significantly slow down the SVG chart generation (parsing ~1000 data points per second).
 
 ```bash
@@ -66,7 +89,7 @@ or build an optimized binary:
 
 ```bash
 cargo build --release
-./target/release/heimdall-rs
+./target/release/heimdall
 ```
 
 ## Tech Stack

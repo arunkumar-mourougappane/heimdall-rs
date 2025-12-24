@@ -1,13 +1,22 @@
 [package]
-name = "heimdall-rs"
+name = "heimdall"
 version = "0.1.0"
 authors = ["Arunkumar Mourougappane <amouroug@buffalo.edu>"]
 edition = "2021"
 description = "A modern, cross-platform system resource monitor written in Rust and Slint."
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/arunkumar-mourougappane/heimdall-rs"
+documentation = "https://docs.rs/heimdall"
 repository = "https://github.com/arunkumar-mourougappane/heimdall-rs"
 keywords = ["system", "monitor", "gui", "slint", "utility"]
 categories = ["gui", "system-programming", "visualization"]
+exclude = [
+    ".github/*",
+    "target/*",
+    "*.png",
+    "*.gif"
+]
 
 [dependencies]
 slint = "1.8.0"
