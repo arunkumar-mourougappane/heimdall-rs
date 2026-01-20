@@ -17,14 +17,26 @@
 
 - **Customizable UI**:
   - **Dark Mode**: Toggle between Light and Dark themes.
+  - **Refresh Rate**: Slider to adjust update frequency from **100ms** to **2000ms** (default 500ms).
   - **Color Customization**: Fully distinct colors for CPU, RAM, GPU, and Network charts.
   - **CPU Color Modes**: Choose between a "Uniform" single color for all cores or distinct "Random/Hue-based" per-core colors.
-  - **Persistent Settings**: Your preferences (colors, theme, mode) are saved automatically and restored on startup.
+  - **Persistent Settings**: Your preferences (colors, theme, refresh rate) are saved automatically and restored on startup.
 
 - **Modern Design**:
   - Responsive layout with Drop Shadows and rounded corners.
   - Smooth animations for buttons and menu transitions.
   - Tabbed interface for organized data viewing.
+
+## Screenshots
+
+![Overview](https://github.com/arunkumar-mourougappane/gjallarhorn-rs/raw/main/screenshots/overview.png)
+*CPU Overview with Per-Core Usage*
+
+![Dark Mode](https://github.com/arunkumar-mourougappane/gjallarhorn-rs/raw/main/screenshots/dark_mode.png)
+*Dark Mode with Custom Colors*
+
+![Storage](https://github.com/arunkumar-mourougappane/gjallarhorn-rs/raw/main/screenshots/storage.png)
+*Disk Usage Monitoring*
 
 ## Installation
 
@@ -43,7 +55,8 @@ cd gjallarhorn-rs
 cargo install --path .
 ```
 
-This will compile and install the `gjallarhorn` binary to `~/.cargo/bin/` (make sure this is in your PATH).
+This will compile and install the `gjallarhorn` binary to `~/.cargo/bin/`. Ensure this directory is in your `PATH`.
+You can then run the application simply by typing `gjallarhorn` in your terminal.
 
 ### Install from crates.io
 
@@ -67,6 +80,7 @@ cargo run --release
 2. **Navigation**: Use the Sidebar to select "Usage" (Monitoring View). The top tabs allow switching between CPU, RAM, GPU, and Network details.
 3. **Preferences**:
     - Click **File > Preferences** to open the settings dialog.
+    - **Refresh Rate**: Use the slider to control how often the data updates (100ms - 2000ms).
     - **Dark Mode**: Switch themes.
     - **CPU Colors**: Toggle "Uniform Color" to use a single color for all cores, or disable it to use persistent random colors for each core.
     - **Other Colors**: Pick custom colors for RAM, GPU, and Network charts.
