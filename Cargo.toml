@@ -17,6 +17,14 @@ exclude = [
     "*.gif"
 ]
 
+[lib]
+name = "gjallarhorn"
+path = "src/lib.rs"
+
+[[bin]]
+name = "gjallarhorn"
+path = "src/main.rs"
+
 [dependencies]
 slint = "1.8.0"
 sysinfo = "0.33.0"
