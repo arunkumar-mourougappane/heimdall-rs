@@ -34,24 +34,28 @@ pub fn brush_to_hex(brush: slint::Brush) -> String {
 }
 
 /// Returns a `SharedString` containing the SVG `d` attribute commands (M, L).
-pub fn generate_path(history: &[f32], max_val: f32) -> SharedString {
+pub fn generate_path(history: &[f32], max_val: f32, max_history_len: usize) -> SharedString {
     if history.is_empty() {
         return "".into();
     }
 
     // Pre-allocate to reduce reallocations.
-    // Approx 15 bytes per point (" L 60 100.00") * 60 points = ~900 bytes.
-    let mut path = String::with_capacity(history.len() * 15);
+    // Approx 20 bytes per point
+    let mut path = String::with_capacity(history.len() * 20);
 
-    let normalize = |val: f32| -> f32 { 100.0 - (val.min(max_val) / max_val * 100.0) };
+    let normalize_y = |val: f32| -> f32 { 100.0 - (val.min(max_val) / max_val * 100.0) };
 
-    // Use write! or fmt for potentially faster formatting, but push_str is fine.
-    // Manual formatting might be faster but less readable.
+    // Normalize X to fit in 60 units (matching the viewbox-width of 60 in appwindow.slint)
+    // Step is calculated based on the MAXIMUM history capacity, ensuring 1 unit of X always equals 1 unit of time.
+    let width = 60.0;
+    let step_x = width / ((max_history_len.max(2) - 1) as f32);
+
     use std::fmt::Write;
-    let _ = write!(path, "M 0 {:.2}", normalize(history[0]));
+    let _ = write!(path, "M 0 {:.2}", normalize_y(history[0]));
 
     for (i, val) in history.iter().enumerate().skip(1) {
-        let _ = write!(path, " L {} {:.2}", i, normalize(*val));
+        let x = i as f32 * step_x;
+        let _ = write!(path, " L {:.2} {:.2}", x, normalize_y(*val));
     }
 
     path.into()
