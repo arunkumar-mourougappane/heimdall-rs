@@ -34,14 +34,21 @@ pub fn brush_to_hex(brush: slint::Brush) -> String {
 }
 
 /// Returns a `SharedString` containing the SVG `d` attribute commands (M, L).
-pub fn generate_path(history: &[f32], max_val: f32, max_history_len: usize) -> SharedString {
-    if history.is_empty() {
+/// Optimized to accept both VecDeque and Vec slices and minimize allocations.
+pub fn generate_path<'a, I>(history: I, max_val: f32, max_history_len: usize) -> SharedString
+where
+    I: IntoIterator<Item = &'a f32>,
+    I::IntoIter: ExactSizeIterator,
+{
+    let mut iter = history.into_iter();
+    let len = iter.len();
+
+    if len == 0 {
         return "".into();
     }
 
-    // Pre-allocate to reduce reallocations.
-    // Approx 20 bytes per point
-    let mut path = String::with_capacity(history.len() * 20);
+    // Optimized capacity: "M 0 99.9" (9 bytes) + " L 59.9 99.9" (13 bytes per point)
+    let mut path = String::with_capacity(9 + len * 13);
 
     let normalize_y = |val: f32| -> f32 { 100.0 - (val.min(max_val) / max_val * 100.0) };
 
@@ -51,11 +58,14 @@ pub fn generate_path(history: &[f32], max_val: f32, max_history_len: usize) -> S
     let step_x = width / ((max_history_len.max(2) - 1) as f32);
 
     use std::fmt::Write;
-    let _ = write!(path, "M 0 {:.2}", normalize_y(history[0]));
+    // Reduced precision from .2 to .1 - imperceptible difference, faster formatting
+    if let Some(first) = iter.next() {
+        let _ = write!(path, "M 0 {:.1}", normalize_y(*first));
+    }
 
-    for (i, val) in history.iter().enumerate().skip(1) {
-        let x = i as f32 * step_x;
-        let _ = write!(path, " L {:.2} {:.2}", x, normalize_y(*val));
+    for (i, val) in iter.enumerate() {
+        let x = (i + 1) as f32 * step_x;
+        let _ = write!(path, " L {:.1} {:.1}", x, normalize_y(*val));
     }
 
     path.into()

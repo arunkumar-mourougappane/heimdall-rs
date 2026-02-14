@@ -130,8 +130,22 @@ pub fn run() -> Result<(), slint::PlatformError> {
     ui.set_net_chart_color(hex_to_color(&settings.net_color).into());
 
     // --- System Info Init ---
-    let (hostname, os, kernel, cpu, cores, mem, bios, storage, gpus) =
-        monitor.borrow().get_static_info();
+    let (
+        hostname,
+        os,
+        kernel,
+        cpu,
+        cores,
+        mem,
+        bios,
+        storage,
+        gpus,
+        cpu_freq,
+        cpu_arch,
+        motherboard,
+        boot_mode,
+        individual_disks,
+    ) = monitor.borrow().get_static_info();
     ui.set_sys_hostname(hostname.into());
     ui.set_sys_os_name(os.into());
     ui.set_sys_kernel(kernel.into());
@@ -141,6 +155,125 @@ pub fn run() -> Result<(), slint::PlatformError> {
     ui.set_sys_bios_version(bios.into());
     ui.set_sys_storage(storage.into());
     ui.set_sys_gpu_names(gpus.into());
+    ui.set_sys_cpu_freq(cpu_freq.into());
+    ui.set_sys_cpu_arch(cpu_arch.into());
+    ui.set_sys_motherboard(motherboard.into());
+    ui.set_sys_boot_mode(boot_mode.into());
+    ui.set_sys_disks(individual_disks.into());
+
+    // Detailed Hardware Info
+    let cpu_details = monitor.borrow().get_cpu_detailed_info();
+    ui.set_sys_cpu_detailed_info(CpuDetailedInfo {
+        name: cpu_details.name.into(),
+        vendor: cpu_details.vendor.into(),
+        architecture: cpu_details.architecture.into(),
+        cores_physical: cpu_details.cores_physical as i32,
+        cores_logical: cpu_details.cores_logical as i32,
+        frequency_current: cpu_details.frequency_current,
+        frequency_max: cpu_details.frequency_max,
+        frequency_min: cpu_details.frequency_min,
+        cache_l1d: cpu_details.cache_l1d.into(),
+        cache_l1i: cpu_details.cache_l1i.into(),
+        cache_l2: cpu_details.cache_l2.into(),
+        cache_l3: cpu_details.cache_l3.into(),
+        virtualization: cpu_details.virtualization.into(),
+        flags: cpu_details.flags.into(),
+    });
+
+    // Detailed Memory Info
+    let mem_details = monitor.borrow_mut().get_memory_detailed_info();
+    ui.set_sys_memory_detailed_info(MemoryDetailedInfo {
+        total_capacity: mem_details.total_capacity.into(),
+        used_capacity: mem_details.used_capacity.into(),
+        memory_type: mem_details.memory_type.into(),
+        speed: mem_details.speed.into(),
+        channels: mem_details.channels as i32,
+        module_count: mem_details.module_count as i32,
+    });
+
+    // Detailed Storage Info
+    let storage_details = monitor.borrow().get_storage_detailed_info();
+    let storage_details_slint: Vec<StorageDetailedInfo> = storage_details
+        .into_iter()
+        .map(|d| StorageDetailedInfo {
+            device_name: d.device_name.into(),
+            model: d.model.into(),
+            capacity: format!("{:.2} GB", d.capacity_bytes as f64 / 1_073_741_824.0).into(),
+            interface_type: d.interface_type.into(),
+            is_ssd: d.is_ssd,
+            serial_number: d.serial_number.into(),
+            firmware_version: d.firmware_version.into(),
+            health_status: d.health_status.into(),
+        })
+        .collect();
+    ui.set_sys_storage_detailed_info(slint::ModelRc::from(std::rc::Rc::new(
+        slint::VecModel::from(storage_details_slint),
+    )));
+
+    // Detailed GPU Info
+    let gpu_details = monitor.borrow().get_gpu_detailed_info();
+    let gpu_details_slint: Vec<GpuDetailedInfo> = gpu_details
+        .into_iter()
+        .map(|d| GpuDetailedInfo {
+            name: d.name.into(),
+            vram_total: format!("{:.1} GB", d.vram_total as f64 / 1024.0 / 1024.0 / 1024.0).into(),
+            vram_used: format!("{:.1} GB", d.vram_used as f64 / 1024.0 / 1024.0 / 1024.0).into(),
+            driver_version: d.driver_version.into(),
+            temperature: d
+                .temperature
+                .map(|t| format!("{}°C", t))
+                .unwrap_or("N/A".to_string())
+                .into(),
+            power_draw: d
+                .power_draw
+                .map(|p| format!("{:.2} W", p as f64 / 1000.0))
+                .unwrap_or("N/A".to_string())
+                .into(), // NVML usually returns mW
+            power_limit: d
+                .power_limit
+                .map(|p| format!("{:.2} W", p as f64 / 1000.0))
+                .unwrap_or("N/A".to_string())
+                .into(),
+            fan_speed: d
+                .fan_speed
+                .map(|f| format!("{}%", f))
+                .unwrap_or("N/A".to_string())
+                .into(),
+            gpu_utilization: d
+                .gpu_utilization
+                .map(|u| format!("{}%", u))
+                .unwrap_or("N/A".to_string())
+                .into(),
+            memory_utilization: d
+                .memory_utilization
+                .map(|u| format!("{}%", u))
+                .unwrap_or("N/A".to_string())
+                .into(),
+        })
+        .collect();
+    ui.set_sys_gpu_detailed_info(slint::ModelRc::from(std::rc::Rc::new(
+        slint::VecModel::from(gpu_details_slint),
+    )));
+
+    // Detailed Network Info
+    let net_details = monitor.borrow().get_network_detailed_info();
+    let net_details_slint: Vec<NetworkDetailedInfo> = net_details
+        .into_iter()
+        .map(|d| NetworkDetailedInfo {
+            name: d.name.into(),
+            mac_address: d.mac_address.into(),
+            rx_bytes: format!("{:.2} MB", d.rx_bytes as f64 / 1_048_576.0).into(),
+            tx_bytes: format!("{:.2} MB", d.tx_bytes as f64 / 1_048_576.0).into(),
+            rx_packets: d.rx_packets.to_string().into(),
+            tx_packets: d.tx_packets.to_string().into(),
+            ip_v4: d.ip_v4.into(),
+            ip_v6: d.ip_v6.into(),
+            link_speed: d.link_speed.into(),
+        })
+        .collect();
+    ui.set_sys_network_detailed_info(slint::ModelRc::from(std::rc::Rc::new(
+        slint::VecModel::from(net_details_slint),
+    )));
 
     // Callbacks
     ui.on_quit(move || {
@@ -175,10 +308,10 @@ pub fn run() -> Result<(), slint::PlatformError> {
             }
 
             let hist = monitor.get_cpu_history(i);
-            if let Some(usage) = hist.last() {
+            if let Some(usage) = hist.back() {
                 let mut data = tick_cpu_model.row_data(i).unwrap();
                 data.usage_str = format!("{:.1}%", usage).into();
-                data.path_commands = generate_path(&hist, 100.0, monitor.max_history);
+                data.path_commands = generate_path(hist, 100.0, monitor.max_history);
                 tick_cpu_model.set_row_data(i, data);
             }
         }
@@ -187,7 +320,7 @@ pub fn run() -> Result<(), slint::PlatformError> {
         let (used_gb, total_gb) = monitor.get_memory_info();
         ui.set_memory_label(format!("{:.1} / {:.1} GB", used_gb, total_gb).into());
         ui.set_memory_path(generate_path(
-            &monitor.get_memory_history(),
+            monitor.get_memory_history(),
             100.0,
             monitor.max_history,
         ));
@@ -293,7 +426,6 @@ pub fn run() -> Result<(), slint::PlatformError> {
                         total: format!("{:.1} GB", total_gb).into(),
                         used: format!("{:.1} GB", used_gb).into(),
                         usage_factor: factor,
-                        text_color: slint::Color::from_rgb_u8(100, 100, 100).into(),
                         bar_color: bar_color.into(),
                     }
                 })
