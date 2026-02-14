@@ -1,0 +1,77 @@
+export struct CpuData {
+    usage_str: string,      // Formatted usage string (e.g., "CPU 1: 45%")
+    path_commands: string,  // SVG path commands for the line chart
+    color: brush,           // Color associated with this metric
+}
+
+export struct DiskData {
+    name: string,
+    mount_point: string,
+    total: string,
+    used: string,
+    usage_factor: float, // 0.0 to 1.0
+    bar_color: brush,
+}
+
+export struct CpuDetailedInfo {
+    name: string,
+    vendor: string,
+    architecture: string,
+    cores_physical: int,
+    cores_logical: int,
+    frequency_current: float,
+    frequency_max: float,
+    frequency_min: float,
+    cache_l1d: string,
+    cache_l1i: string,
+    cache_l2: string,
+    cache_l3: string,
+    virtualization: string,
+    flags: string,
+}
+
+export struct MemoryDetailedInfo {
+    total_capacity: string,
+    used_capacity: string,
+    memory_type: string,
+    speed: string,
+    channels: int,
+    module_count: int,
+}
+
+export struct StorageDetailedInfo {
+    device_name: string,
+    model: string,
+    capacity: string,       // Formatted bytes
+    interface_type: string,
+    is_ssd: bool,
+    serial_number: string,
+    firmware_version: string,
+    health_status: string,
+}
+
+export struct NetworkDetailedInfo {
+    name: string,
+    mac_address: string,
+    rx_bytes: string,       // Formatted bytes
+    tx_bytes: string,       // Formatted bytes
+    rx_packets: string,     // Formatted packets
+    tx_packets: string,     // Formatted packets
+    ip_v4: string,
+    ip_v6: string,
+    link_speed: string,
+}
+
+export struct GpuDetailedInfo {
+    name: string,
+    vram_total: string,     // Formatted bytes
+    vram_used: string,      // Formatted bytes
+    driver_version: string,
+    temperature: string,    // Formatted "XX C" or "N/A"
+    power_draw: string,     // Formatted "XX W" or "N/A"
+    power_limit: string,    // Formatted "XX W" or "N/A"
+    fan_speed: string,      // Formatted "XX%" or "N/A"
+    gpu_utilization: string, // Formatted "XX%" or "N/A"
+    memory_utilization: string, // Formatted "XX%" or "N/A"
+}
+

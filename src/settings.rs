@@ -26,6 +26,7 @@ pub struct AppSettings {
     pub gpu_color: String,
     pub net_color: String,
     pub cpu_core_colors: Vec<String>,
+    pub refresh_rate_ms: u64,
 }
 
 impl Default for AppSettings {
@@ -38,6 +39,7 @@ impl Default for AppSettings {
             gpu_color: "#9b59b6".to_string(), // Purple
             net_color: "#e67e22".to_string(), // Orange
             cpu_core_colors: Vec::new(),
+            refresh_rate_ms: 500,
         }
     }
 }

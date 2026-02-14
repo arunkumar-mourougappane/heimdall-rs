@@ -1,0 +1,892 @@
+import {
+    VerticalBox,
+    HorizontalBox,
+    GridBox,
+    ScrollView,
+} from "std-widgets.slint";
+import { Card, TabButton } from "components.slint";
+import {
+    CpuDetailedInfo,
+    MemoryDetailedInfo,
+    StorageDetailedInfo,
+    GpuDetailedInfo,
+    NetworkDetailedInfo,
+} from "structs.slint";
+
+export component InformationView inherits VerticalBox {
+    in property <CpuDetailedInfo> cpu-detailed-info;
+    in property <MemoryDetailedInfo> memory-detailed-info;
+    in property <[StorageDetailedInfo]> storage-detailed-info;
+    in property <[GpuDetailedInfo]> gpu-detailed-info;
+    in property <[NetworkDetailedInfo]> network-detailed-info;
+    in property <string> os-name;
+    in property <string> kernel-version;
+    in property <string> hostname;
+    in property <string> uptime;
+    in property <string> cpu-brand;
+    in property <int> cpu-cores;
+    in property <string> cpu-freq;
+    in property <string> cpu-arch;
+    in property <string> total-memory;
+    in property <string> motherboard;
+    in property <string> boot-mode;
+    in property <brush> text-color;
+    in property <brush> card-bg;
+    in property <brush> card-border;
+    in property <string> bios-version;
+    in property <string> storage-total;
+    in property <string> individual-disks;
+    in property <string> gpu-names;
+
+    // TODO: Add detailed info properties when wired from Rust
+    // For now, we'll display the existing data in new structure
+
+    property <int> active-tab: 0;  // 0=Software, 1=Hardware
+    property <int> hardware-subtab: 0;  // 0=CPU, 1=Memory, 2=Storage, 3=GPU, 4=Network
+
+    padding: 15px;
+    spacing: 4px;
+
+    // Main tab navigation
+    HorizontalBox {
+        alignment: start;
+        spacing: 4px;
+        TabButton {
+            text: "Software";
+            active: root.active-tab == 0;
+            text-color: root.text-color;
+            clicked => {
+                root.active-tab = 0;
+            }
+        }
+
+        TabButton {
+            text: "Hardware";
+            active: root.active-tab == 1;
+            text-color: root.text-color;
+            clicked => {
+                root.active-tab = 1;
+            }
+        }
+    }
+
+    // Software Tab Content
+    if root.active-tab == 0: Rectangle {
+        background: root.card-bg;
+        border-color: root.card-border;
+        border-width: 1px;
+        border-radius: 8px;
+        drop-shadow-blur: 15px;
+        drop-shadow-color: #00000020;
+        drop-shadow-offset-y: 4px;
+
+        VerticalLayout {
+            padding: 12px;
+            spacing: 6px;
+            alignment: start;
+            HorizontalLayout {
+                spacing: 10px;
+                Text {
+                    text: "🖥️ Hostname:";
+                    width: 160px;
+                    color: root.text-color;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    text: root.hostname;
+                    color: root.text-color;
+                    vertical-alignment: center;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 10px;
+                Text {
+                    text: "💿 OS:";
+                    width: 160px;
+                    color: root.text-color;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    text: root.os-name;
+                    color: root.text-color;
+                    vertical-alignment: center;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 10px;
+                Text {
+                    text: "⚙️ Kernel:";
+                    width: 160px;
+                    color: root.text-color;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    text: root.kernel-version;
+                    color: root.text-color;
+                    vertical-alignment: center;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 10px;
+                Text {
+                    text: "🔧 BIOS Version:";
+                    width: 160px;
+                    color: root.text-color;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    text: root.bios-version;
+                    color: root.text-color;
+                    vertical-alignment: center;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 10px;
+                Text {
+                    text: "⏱️ Uptime:";
+                    width: 160px;
+                    color: root.text-color;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    text: root.uptime;
+                    color: root.text-color;
+                    vertical-alignment: center;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 10px;
+                Text {
+                    text: "🔐 Boot Mode:";
+                    width: 160px;
+                    color: root.text-color;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    text: root.boot-mode;
+                    color: root.text-color;
+                    vertical-alignment: center;
+                }
+            }
+        }
+    }
+
+    // Hardware Tab with Sub-tabs
+    if root.active-tab == 1: VerticalBox {
+        spacing: 5px;
+
+        // Hardware sub-tab navigation
+        HorizontalBox {
+            alignment: start;
+            spacing: 5px;
+            TabButton {
+                text: "🔲 CPU";
+                active: root.hardware-subtab == 0;
+                text-color: root.text-color;
+                clicked => {
+                    root.hardware-subtab = 0;
+                }
+            }
+
+            TabButton {
+                text: "💾 Memory";
+                active: root.hardware-subtab == 1;
+                text-color: root.text-color;
+                clicked => {
+                    root.hardware-subtab = 1;
+                }
+            }
+
+            TabButton {
+                text: "💽 Storage";
+                active: root.hardware-subtab == 2;
+                text-color: root.text-color;
+                clicked => {
+                    root.hardware-subtab = 2;
+                }
+            }
+
+            TabButton {
+                text: "🎮 GPU";
+                active: root.hardware-subtab == 3;
+                text-color: root.text-color;
+                clicked => {
+                    root.hardware-subtab = 3;
+                }
+            }
+
+            TabButton {
+                text: "🌐 Network";
+                active: root.hardware-subtab == 4;
+                text-color: root.text-color;
+                clicked => {
+                    root.hardware-subtab = 4;
+                }
+            }
+        }
+
+        // CPU Sub-tab
+        if root.hardware-subtab == 0: Rectangle {
+            background: root.card-bg;
+            border-color: root.card-border;
+            border-width: 1px;
+            border-radius: 8px;
+            drop-shadow-blur: 15px;
+            drop-shadow-color: #00000020;
+            drop-shadow-offset-y: 4px;
+
+            ScrollView {
+                VerticalLayout {
+                    padding: 8px;
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "🔲 CPU Details";
+                        font-size: 16px;
+                        font-weight: 800;
+                        color: root.text-color;
+                    }
+
+                    // Basic Info Section
+                    VerticalLayout {
+                        spacing: 4px;
+
+                        HorizontalLayout {
+                            spacing: 12px;
+                            Text {
+                                text: "Processor:";
+                                width: 160px;
+                                color: root.text-color;
+                                font-weight: 700;
+                                vertical-alignment: center;
+                            }
+
+                            Text {
+                                text: root.cpu-brand;
+                                color: root.text-color;
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 12px;
+                            Text {
+                                text: "Architecture:";
+                                width: 160px;
+                                color: root.text-color;
+                                font-weight: 700;
+                                vertical-alignment: center;
+                            }
+
+                            Text {
+                                text: root.cpu-arch;
+                                color: root.text-color;
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 12px;
+                            Text {
+                                text: "Logical Cores:";
+                                width: 160px;
+                                color: root.text-color;
+                                font-weight: 700;
+                                vertical-alignment: center;
+                            }
+
+                            Text {
+                                text: root.cpu-cores;
+                                color: root.text-color;
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 12px;
+                            Text {
+                                text: "Current Frequency:";
+                                width: 160px;
+                                color: root.text-color;
+                                font-weight: 700;
+                                vertical-alignment: center;
+                            }
+
+                            Text {
+                                text: root.cpu-freq;
+                                color: root.text-color;
+                                vertical-alignment: center;
+                            }
+                        }
+                    }
+
+                    // Divider
+                    Rectangle {
+                        height: 1px;
+                        background: root.card-border;
+                    }
+
+                    // Cache Information (placeholder for detailed data)
+                    VerticalBox {
+                        spacing: 4px;
+
+                        Text {
+                            text: "Cache Hierarchy";
+                            font-size: 13px;
+                            font-weight: 700;
+                            color: root.text-color;
+                        }
+
+                        HorizontalBox {
+                            Text {
+                                text: "L1 Data Cache:";
+                                width: 160px;
+                                color: root.text-color;
+                            }
+
+                            Text {
+                                text: root.cpu-detailed-info.cache_l1d;
+                                color: root.text-color;
+                            }
+                        }
+
+                        HorizontalBox {
+                            Text {
+                                text: "L1 Instruction Cache:";
+                                width: 160px;
+                                color: root.text-color;
+                            }
+
+                            Text {
+                                text: root.cpu-detailed-info.cache_l1i;
+                                color: root.text-color;
+                            }
+                        }
+
+                        HorizontalBox {
+                            Text {
+                                text: "L2 Cache:";
+                                width: 160px;
+                                color: root.text-color;
+                            }
+
+                            Text {
+                                text: root.cpu-detailed-info.cache_l2;
+                                color: root.text-color;
+                            }
+                        }
+
+                        HorizontalBox {
+                            Text {
+                                text: "L3 Cache:";
+                                width: 160px;
+                                color: root.text-color;
+                            }
+
+                            Text {
+                                text: root.cpu-detailed-info.cache_l3;
+                                color: root.text-color;
+                            }
+                        }
+                    }
+
+                    // Divider
+                    Rectangle {
+                        height: 1px;
+                        background: root.card-border;
+                    }
+
+                    // Features
+                    VerticalBox {
+                        spacing: 4px;
+
+                        Text {
+                            text: "Features & Capabilities";
+                            font-size: 13px;
+                            font-weight: 700;
+                            color: root.text-color;
+                        }
+
+                        HorizontalBox {
+                            Text {
+                                text: "Virtualization:";
+                                width: 160px;
+                                color: root.text-color;
+                            }
+
+                            Text {
+                                text: root.cpu-detailed-info.virtualization;
+                                color: root.text-color;
+                            }
+                        }
+
+                        HorizontalBox {
+                            Text {
+                                text: "Instruction Sets:";
+                                width: 160px;
+                                color: root.text-color;
+                            }
+
+                            Text {
+                                text: root.cpu-detailed-info.flags;
+                                color: root.text-color;
+                                wrap: word-wrap;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Memory Sub-tab
+        if root.hardware-subtab == 1: Rectangle {
+            background: root.card-bg;
+            border-color: root.card-border;
+            border-width: 1px;
+            border-radius: 8px;
+            drop-shadow-blur: 15px;
+            drop-shadow-color: #00000020;
+            drop-shadow-offset-y: 4px;
+
+            ScrollView {
+                VerticalLayout {
+                    padding: 8px;
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "💾 Memory Details";
+                        font-size: 16px;
+                        font-weight: 800;
+                        color: root.text-color;
+                    }
+
+                    HorizontalLayout {
+                        spacing: 12px;
+                        Text {
+                            text: "Total Capacity:";
+                            width: 160px;
+                            color: root.text-color;
+                            font-weight: 700;
+                            vertical-alignment: center;
+                        }
+
+                        Text {
+                            text: root.memory-detailed-info.total-capacity;
+                            color: root.text-color;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        spacing: 12px;
+                        Text {
+                            text: "Used Capacity:";
+                            width: 160px;
+                            color: root.text-color;
+                            font-weight: 700;
+                            vertical-alignment: center;
+                        }
+
+                        Text {
+                            text: root.memory-detailed-info.used-capacity;
+                            color: root.text-color;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    // Divider
+                    Rectangle {
+                        height: 1px;
+                        background: root.card-border;
+                    }
+
+                    HorizontalLayout {
+                        spacing: 12px;
+                        Text {
+                            text: "Type:";
+                            width: 160px;
+                            color: root.text-color;
+                            font-weight: 700;
+                            vertical-alignment: center;
+                        }
+
+                        Text {
+                            text: root.memory-detailed-info.memory-type;
+                            color: root.text-color;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        spacing: 12px;
+                        Text {
+                            text: "Speed:";
+                            width: 160px;
+                            color: root.text-color;
+                            font-weight: 700;
+                            vertical-alignment: center;
+                        }
+
+                        Text {
+                            text: root.memory-detailed-info.speed;
+                            color: root.text-color;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        spacing: 12px;
+                        Text {
+                            text: "Channels:";
+                            width: 160px;
+                            color: root.text-color;
+                            font-weight: 700;
+                            vertical-alignment: center;
+                        }
+
+                        Text {
+                            text: root.memory-detailed-info.channels;
+                            color: root.text-color;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        spacing: 12px;
+                        Text {
+                            text: "Module Count:";
+                            width: 160px;
+                            color: root.text-color;
+                            font-weight: 700;
+                            vertical-alignment: center;
+                        }
+
+                        Text {
+                            text: root.memory-detailed-info.module-count;
+                            color: root.text-color;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Storage Sub-tab
+        if root.hardware-subtab == 2: Rectangle {
+            background: root.card-bg;
+            border-color: root.card-border;
+            border-width: 1px;
+            border-radius: 8px;
+            drop-shadow-blur: 15px;
+            drop-shadow-color: #00000020;
+            drop-shadow-offset-y: 4px;
+
+            ScrollView {
+                VerticalLayout {
+                    padding: 8px;
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "💽 Storage Devices";
+                        font-size: 16px;
+                        font-weight: 800;
+                        color: root.text-color;
+                    }
+
+                    VerticalLayout {
+                        spacing: 5px;
+
+                        // Header removed as list items explain themselves
+
+                        // Replaced by detailed list below
+
+                        for device in root.storage-detailed-info: Rectangle {
+                            background: root.card-bg.darker(5%); // Slightly darker background for each device
+                            border-radius: 4px;
+                            border-color: root.card-border;
+                            border-width: 1px;
+                            VerticalLayout {
+                                padding: 8px;
+                                spacing: 4px;
+                                HorizontalLayout {
+                                    spacing: 12px;
+                                    Text {
+                                        text: device.device_name + " (" + device.model + ")";
+                                        color: root.text-color;
+                                        font-weight: 700;
+                                        font-size: 14px;
+                                    }
+                                }
+
+                                HorizontalLayout {
+                                    spacing: 12px;
+                                    Text {
+                                        text: "Capacity: " + device.capacity;
+                                        color: root.text-color;
+                                        font-size: 12px;
+                                    }
+
+                                    Text {
+                                        text: "Interface: " + device.interface_type;
+                                        color: root.text-color;
+                                        font-size: 12px;
+                                    }
+
+                                    Text {
+                                        text: device.is_ssd ? "SSD" : "HDD";
+                                        color: device.is_ssd ? #2ecc71 : #e67e22; // Green for SSD, Orange for HDD
+                                        font-size: 12px;
+                                        font-weight: 700;
+                                    }
+                                }
+
+                                HorizontalLayout {
+                                    spacing: 12px;
+                                    Text {
+                                        text: "Serial: " + device.serial_number;
+                                        color: root.text-color.darker(20%);
+                                        font-size: 11px;
+                                    }
+
+                                    Text {
+                                        text: "FW: " + device.firmware_version;
+                                        color: root.text-color.darker(20%);
+                                        font-size: 11px;
+                                    }
+
+                                    Text {
+                                        text: "Health: " + device.health_status;
+                                        color: device.health_status == "Passed" ? #2ecc71 : (device.health_status == "Failed" ? #e74c3c : #f1c40f);
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // GPU Sub-tab
+        if root.hardware-subtab == 3: Rectangle {
+            background: root.card-bg;
+            border-color: root.card-border;
+            border-width: 1px;
+            border-radius: 8px;
+            drop-shadow-blur: 15px;
+            drop-shadow-color: #00000020;
+            drop-shadow-offset-y: 4px;
+
+            ScrollView {
+                VerticalLayout {
+                    padding: 8px;
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "🎮 GPU Details";
+                        font-size: 16px;
+                        font-weight: 800;
+                        color: root.text-color;
+                    }
+
+                    for gpu in root.gpu-detailed-info: Rectangle {
+                        background: root.card-bg.darker(5%);
+                        border-radius: 4px;
+                        border-color: root.card-border;
+                        border-width: 1px;
+                        VerticalLayout {
+                            padding: 8px;
+                            spacing: 4px;
+
+                            HorizontalLayout {
+                                spacing: 12px;
+                                Text {
+                                    text: gpu.name;
+                                    color: root.text-color;
+                                    font-weight: 700;
+                                    font-size: 14px;
+                                }
+                            }
+
+                            // VRAM Usage
+                            HorizontalLayout {
+                                spacing: 12px;
+                                Text {
+                                    text: "VRAM: " + gpu.vram_used + " / " + gpu.vram_total;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                }
+                            }
+
+                            // Driver & Temp
+                            HorizontalLayout {
+                                spacing: 12px;
+                                Text {
+                                    text: "Driver: " + gpu.driver_version;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+
+                                Rectangle {
+                                    horizontal-stretch: 1;
+                                }
+
+                                Text {
+                                    text: "Temp: " + gpu.temperature;
+                                    color: gpu.temperature != "N/A" ? (gpu.temperature.to-float() > 80 ? #e74c3c : (gpu.temperature.to-float() > 60 ? #f1c40f : #2ecc71)) : root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+                            }
+                            
+                            // Power & Usage
+                             HorizontalLayout {
+                                spacing: 12px;
+                                Text {
+                                    text: "Power: " + gpu.power_draw + " / " + gpu.power_limit;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+
+                                Rectangle {
+                                    horizontal-stretch: 1;
+                                }
+
+                                Text {
+                                    text: "Load: " + gpu.gpu_utilization;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+                            }
+                        }
+                    }
+                    if root.gpu-detailed-info.length == 0: Text {
+                        text: "No NVIDIA GPUs detected or NVML not available.";
+                        color: root.text-color;
+                        font-italic: true;
+                    }
+
+                    // Replaced by detailed list check above
+                }
+            }
+        }
+
+        // Network Sub-tab
+        if root.hardware-subtab == 4: Rectangle {
+            background: root.card-bg;
+            border-color: root.card-border;
+            border-width: 1px;
+            border-radius: 8px;
+            drop-shadow-blur: 15px;
+            drop-shadow-color: #00000020;
+            drop-shadow-offset-y: 4px;
+
+            ScrollView {
+                VerticalLayout {
+                    padding: 8px;
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "🌐 Network Interfaces";
+                        font-size: 16px;
+                        font-weight: 800;
+                        color: root.text-color;
+                    }
+
+                    for net in root.network-detailed-info: Rectangle {
+                        background: root.card-bg.darker(5%);
+                        border-radius: 4px;
+                        border-color: root.card-border;
+                        border-width: 1px;
+                        VerticalLayout {
+                            padding: 8px;
+                            spacing: 4px;
+                            
+                            // Name and MAC
+                            HorizontalLayout {
+                                Text {
+                                    text: net.name;
+                                    color: root.text-color;
+                                    font-weight: 700;
+                                    font-size: 14px;
+                                    vertical-alignment: center;
+                                }
+
+                                Rectangle {
+                                    horizontal-stretch: 1;
+                                } // Spacer pushes MAC to right
+                                Text {
+                                    text: net.mac_address;
+                                    color: root.text-color.darker(20%);
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+                            }
+
+                            // IPs
+                            VerticalLayout {
+                                spacing: 2px;
+                                if net.ip_v4 != "N/A": Text {
+                                    text: "IPv4: " + net.ip_v4;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                }
+                                if net.ip_v6 != "N/A": Text {
+                                    text: "IPv6: " + net.ip_v6;
+                                    color: root.text-color.darker(10%);
+                                    font-size: 11px;
+                                }
+                            }
+
+                            // Speed & Traffic Stats
+                            HorizontalLayout {
+                                Text {
+                                    text: "Speed: " + net.link_speed;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+
+                                Rectangle {
+                                    horizontal-stretch: 1;
+                                } // Spacer pushes stats to right
+                                Text {
+                                    text: "Rx: " + net.rx_bytes + " / Tx: " + net.tx_bytes;
+                                    color: root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
