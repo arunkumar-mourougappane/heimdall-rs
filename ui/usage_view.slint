@@ -115,6 +115,7 @@ export component UsageView inherits VerticalBox {
             card-border-color: root.card-border;
             text-color: root.text-color;
             VerticalBox {
+                vertical-stretch: 1;
                 spacing: 10px;
                 Text {
                     text: "System Memory: " + root.memory-label;
@@ -164,6 +165,7 @@ export component UsageView inherits VerticalBox {
             card-border-color: root.card-border;
             text-color: root.text-color;
             ListView {
+                vertical-stretch: 1;
                 for gpu in root.gpu-compute: VerticalBox {
                     padding-bottom: 10px;
                     Text {
@@ -189,6 +191,7 @@ export component UsageView inherits VerticalBox {
             card-border-color: root.card-border;
             text-color: root.text-color;
             ListView {
+                vertical-stretch: 1;
                 for net in root.networks: VerticalBox {
                     padding-bottom: 15px;
                     Text {
@@ -217,6 +220,7 @@ export component UsageView inherits VerticalBox {
             card-border-color: root.card-border;
             text-color: root.text-color;
             ListView {
+                vertical-stretch: 1;
                 for disk in root.disks: VerticalBox {
                     padding-bottom: 20px;
                     HorizontalBox {
